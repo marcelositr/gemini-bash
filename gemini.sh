@@ -19,14 +19,14 @@
 #      REVISION: n/a
 #===============================================================================
 
-# --- CONFIGURAÇÃO ---
+# --- CONFIGURATION ---
 API_KEY="${GEMINI_API_KEY}"
-# Nome do modelo a ser usado. "gemini-1.5-flash-latest" é a melhor escolha geral.
-# gemini-1.5-flash-latest - Mais eficiente bom baixo consumo de cotas, ideal para contas gratuítas
-# gemini-1.5-pro-latest - Mais poderso e consomem mais cotas
+# Model to be used. "gemini-1.5-flash-latest" is the best overall choice.
+# gemini-1.5-flash-latest
+# gemini-1.5-pro-latest
 MODEL_NAME="gemini-1.5-flash-latest"
 
-# --- VERIFICAÇÕES INICIAIS ---
+# --- INITIAL CHECKS ---
 if [ -z "${API_KEY}" ]; then
   echo "Erro: A variável de ambiente GEMINI_API_KEY não está definida."
   exit 1
@@ -40,8 +40,11 @@ if [ "$#" -eq 0 ]; then
   exit 1
 fi
 
-# --- PREPARAÇÃO E EXECUÇÃO DA REQUISIÇÃO ---
+# --- PREPARE AND EXECUTE THE REQUEST ---
+
+# Capture the user's input
 USER_INPUT="$*"
+# Add instructions for the AI to be brief and direct (Prompt Engineering)
 PROMPT_TEXT="Regras: Responda da forma mais curta e direta possível. Use apenas texto puro, sem nenhuma formatação como Markdown (negrito, listas, etc.). Pergunta do usuário: ${USER_INPUT}"
 API_URL="https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}"
 JSON_PAYLOAD=$(printf '{"contents":[{"parts":[{"text":"%s"}]}]}' "$PROMPT_TEXT")
@@ -50,27 +53,34 @@ echo -n "${MODEL_NAME} está pensando... " &
 SPINNER_PID=$!
 trap "kill $SPINNER_PID &>/dev/null; wait $SPINNER_PID &>/dev/null; echo -ne '\r\033[K'" EXIT
 
+# Make the API call and store the response and the HTTP status code
 HTTP_RESPONSE=$(curl -s -o /dev/stdout -w "%{http_code}" \
   -H "Content-Type: application/json" \
   -d "${JSON_PAYLOAD}" \
   "${API_URL}")
 
+# Extract the status code from the end of the response string
 HTTP_STATUS=$(echo "$HTTP_RESPONSE" | tail -n1)
+# Remove the last line (the status code)
 API_RESPONSE_BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
 
 kill $SPINNER_PID &>/dev/null
 wait $SPINNER_PID &>/dev/null
 echo -ne "\r\033[K"
 
+# Check if the status code is not 200 (OK)
 if [ "$HTTP_STATUS" -ne 200 ]; then
     echo "Erro: A API do Google retornou um erro (Código: $HTTP_STATUS)."
+# Try to extract and display the error message from the JSON nicely
     ERROR_MESSAGE=$(echo "$API_RESPONSE_BODY" | jq -r '.error.message // "Não foi possível extrair a mensagem de erro detalhada."')
     echo "Detalhes: $ERROR_MESSAGE"
     exit 1
 fi
 
+# Extract the text from the successful response
 RESPONSE_TEXT=$(echo "${API_RESPONSE_BODY}" | jq -r '.candidates[0].content.parts[0].text')
 
+# This check is important in case the response is blocked for safety reasons, for example.
 if [ -z "$RESPONSE_TEXT" ] || [ "$RESPONSE_TEXT" == "null" ]; then
     BLOCK_REASON=$(echo "${API_RESPONSE_BODY}" | jq -r '.promptFeedback.blockReason // ""')
     if [ -n "$BLOCK_REASON" ]; then
@@ -83,5 +93,5 @@ if [ -z "$RESPONSE_TEXT" ] || [ "$RESPONSE_TEXT" == "null" ]; then
     exit 1
 fi
 
-# Exibe a resposta final usando o nome do modelo de forma dinâmica
+# Display the final response using the model name dynamically
 echo -e "\n\033[30;42m${MODEL_NAME}:\033[0m\033[32m ${RESPONSE_TEXT}\033[0m\n"
