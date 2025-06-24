@@ -13,8 +13,7 @@
 #          BUGS: n/a
 #         NOTES: Requires a valid API key from Google AI Studio.
 #                The response behavior (prompt) can be adjusted within the script.
-#        AUTHOR: ~marcelositr marcelositr@vaporhole.xyz (Adapted with AI help)
-#  ORGANIZATION: vaporhole.xyz
+#        AUTHOR: ~marcelositr marcelost@riseup.net
 #       CREATED: 05-26-2025
 #       VERSION: 1.0
 #      REVISION: n/a
