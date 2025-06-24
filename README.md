@@ -28,6 +28,10 @@ Antes de começar, você precisará de:
         ```bash
         sudo dnf install -y jq
         ```
+      - **Arch/CachyOS/Manjaro:**
+        ```bash
+        sudo pacman -S jq
+        ```
       - **macOS (com Homebrew):**
         ```bash
         brew install jq
