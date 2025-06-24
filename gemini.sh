@@ -3,18 +3,19 @@
 #
 #          FILE: gemini.sh
 #
-#         USAGE: ./gemini.sh "Sua pergunta para a IA"
+#         USAGE: ./gemini.sh "Your question for the AI"
 #
-#   DESCRIPTION: Interface de Linha de Comando (CLI) para a API do Google Gemini.
-#                Simplifica o acesso à IA do Google diretamente do terminal.
+#   DESCRIPTION: Command-Line Interface (CLI) for the Google Gemini API.
+#                Simplifies access to Google's AI directly from the terminal.
 #
 #       OPTIONS: n/a
-#  REQUIREMENTS: bash, curl, jq, Variável de ambiente GEMINI_API_KEY
+#  REQUIREMENTS: bash, curl, jq, GEMINI_API_KEY environment variable
 #          BUGS: n/a
-#         NOTES: Requer uma chave de API válida do Google AI Studio.
-#                O comportamento da resposta (prompt) pode ser ajustado no script.
-#        AUTHOR: ~marcelositr marcelost@riseup.net
-#       CREATED: 23/05/2024
+#         NOTES: Requires a valid API key from Google AI Studio.
+#                The response behavior (prompt) can be adjusted within the script.
+#        AUTHOR: ~marcelositr marcelositr@vaporhole.xyz (Adapted with AI help)
+#  ORGANIZATION: vaporhole.xyz
+#       CREATED: 05-26-2025
 #       VERSION: 1.0
 #      REVISION: n/a
 #===============================================================================
