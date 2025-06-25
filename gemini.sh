@@ -10,13 +10,12 @@
 #
 #       OPTIONS: n/a
 #  REQUIREMENTS: bash, curl, jq, GEMINI_API_KEY environment variable
-#          BUGS: n/a
+#          BUGS: The EXIT trap can clear the final output. Fixed in v1.3.
 #         NOTES: Requires a valid API key from Google AI Studio.
-#                The response behavior (prompt) can be adjusted within the script.
 #        AUTHOR: ~marcelositr marcelost@riseup.net
 #       CREATED: 05-26-2025
-#       VERSION: 1.0
-#      REVISION: n/a
+#       VERSION: 1.1
+#      REVISION: Fixed bug where the EXIT trap would erase the final output.
 #===============================================================================
 
 # --- CONFIGURATION ---
@@ -41,11 +40,8 @@ if [ "$#" -eq 0 ]; then
 fi
 
 # --- PREPARE AND EXECUTE THE REQUEST ---
-
-# Capture the user's input
 USER_INPUT="$*"
-# Add instructions for the AI to be brief and direct (Prompt Engineering)
-PROMPT_TEXT="Regras: Responda da forma mais curta e direta possível. Use apenas texto puro, sem nenhuma formatação como Markdown (negrito, listas, etc.). Pergunta do usuário: ${USER_INPUT}"
+PROMPT_TEXT="Instruções: Responda de forma tecnicamente precisa, mas que seja clara e de fácil entendimento. Limite sua resposta a no máximo 5 linhas. Use apenas texto puro, sem formatação Markdown (negrito, listas, etc.). Pergunta do usuário: ${USER_INPUT}"
 API_URL="https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}"
 JSON_PAYLOAD=$(printf '{"contents":[{"parts":[{"text":"%s"}]}]}' "$PROMPT_TEXT")
 
@@ -53,34 +49,32 @@ echo -n "${MODEL_NAME} está pensando... " &
 SPINNER_PID=$!
 trap "kill $SPINNER_PID &>/dev/null; wait $SPINNER_PID &>/dev/null; echo -ne '\r\033[K'" EXIT
 
-# Make the API call and store the response and the HTTP status code
 HTTP_RESPONSE=$(curl -s -o /dev/stdout -w "%{http_code}" \
   -H "Content-Type: application/json" \
   -d "${JSON_PAYLOAD}" \
   "${API_URL}")
 
-# Extract the status code from the end of the response string
 HTTP_STATUS=$(echo "$HTTP_RESPONSE" | tail -n1)
-# Remove the last line (the status code)
 API_RESPONSE_BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
 
 kill $SPINNER_PID &>/dev/null
 wait $SPINNER_PID &>/dev/null
 echo -ne "\r\033[K"
 
-# Check if the status code is not 200 (OK)
 if [ "$HTTP_STATUS" -ne 200 ]; then
-    echo "Erro: A API do Google retornou um erro (Código: $HTTP_STATUS)."
-# Try to extract and display the error message from the JSON nicely
-    ERROR_MESSAGE=$(echo "$API_RESPONSE_BODY" | jq -r '.error.message // "Não foi possível extrair a mensagem de erro detalhada."')
-    echo "Detalhes: $ERROR_MESSAGE"
+    if [[ "$HTTP_STATUS" -eq 429 ]] || \
+       ([[ "$HTTP_STATUS" -eq 403 ]] && echo "$API_RESPONSE_BODY" | grep -q "rateLimitExceeded"); then
+        echo -e "\n\033[31mErro: Limite de uso (quota) da API atingido. Tente novamente mais tarde.\033[0m\n"
+    else
+        echo -e "\n\033[31mErro: A API do Google retornou um erro inesperado (Código: $HTTP_STATUS).\033[0m"
+        ERROR_MESSAGE=$(echo "$API_RESPONSE_BODY" | jq -r '.error.message // "Não foi possível extrair a mensagem de erro detalhada."')
+        echo "Detalhes: $ERROR_MESSAGE"
+    fi
     exit 1
 fi
 
-# Extract the text from the successful response
 RESPONSE_TEXT=$(echo "${API_RESPONSE_BODY}" | jq -r '.candidates[0].content.parts[0].text')
 
-# This check is important in case the response is blocked for safety reasons, for example.
 if [ -z "$RESPONSE_TEXT" ] || [ "$RESPONSE_TEXT" == "null" ]; then
     BLOCK_REASON=$(echo "${API_RESPONSE_BODY}" | jq -r '.promptFeedback.blockReason // ""')
     if [ -n "$BLOCK_REASON" ]; then
@@ -92,6 +86,9 @@ if [ -z "$RESPONSE_TEXT" ] || [ "$RESPONSE_TEXT" == "null" ]; then
     fi
     exit 1
 fi
+
+# Disable the EXIT trap to prevent it from clearing the final output.
+trap - EXIT
 
 # Display the final response using the model name dynamically
 echo -e "\n\033[30;42m${MODEL_NAME}:\033[0m\033[32m ${RESPONSE_TEXT}\033[0m\n"
