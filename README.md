@@ -20,12 +20,12 @@ Antes de começar, você precisará de:
 
   ### Como gerar sua chave de API no Google AI Studio
 
-1. Acesse o site do [Google AI Studio](https://aistudio.google.com/app/apikey).
-2. Faça login com sua conta Google.
-3. No painel, clique em **"Create API Key"** ou **"Criar chave de API"**.
-4. Dê um nome para a chave, por exemplo: `gemini-cli`.
-5. Copie o valor da chave gerada — ela será usada para autenticar suas requisições.
-6. Guarde essa chave com segurança e não a compartilhe publicamente.
+   1. Acesse o site do [Google AI Studio](https://aistudio.google.com/app/apikey).
+   2. Faça login com sua conta Google.
+   3. No painel, clique em **"Create API Key"** ou **"Criar chave de API"**.
+   4. Dê um nome para a chave, por exemplo: `gemini-cli`.
+   5. Copie o valor da chave gerada — ela será usada para autenticar suas requisições.
+   6. Guarde essa chave com segurança e não a compartilhe publicamente.
 
 **Importante:** A chave é gratuita, mas tem limites diários de uso. Caso atinja o limite, aguarde até o reset que ocorre geralmente no próximo dia.
 
