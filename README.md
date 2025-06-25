@@ -4,7 +4,7 @@ Uma coleção de scripts simples em Bash para interagir com a API do Google Gemi
 
 Converse com a IA do Google diretamente do seu terminal ou através de uma interface gráfica amigável e minimalista.
 
-*img*
+![Gemini Shell Banner](https://github.com/marcelositr/gemini-bash/blob/main/images/geminishell.png?raw=true)
 
 ## ✨ Funcionalidades Principais
 
