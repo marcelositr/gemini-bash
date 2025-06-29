@@ -1,5 +1,8 @@
 # Gemini Shell Scripts - CLI & GUI para a IA do Google
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Shell](https://img.shields.io/badge/Shell-Bash-blue)
+
 Uma coleção de scripts simples em Bash para interagir com a API do Google Gemini através de uma interface de linha de comando (`gemini.sh`) ou uma interface gráfica (`gemini-gui.sh`).
 
 Converse com a IA do Google diretamente do seu terminal ou através de uma interface gráfica amigável e minimalista.
