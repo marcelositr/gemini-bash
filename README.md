@@ -2,6 +2,7 @@
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Shell](https://img.shields.io/badge/Shell-Bash-blue)
+[![Wiki](https://img.shields.io/badge/Project-Wiki-blueviolet.svg)](https://github.com/marcelositr/gemini-shell/wiki)
 
 Uma coleção de scripts simples em Bash para interagir com a API do Google Gemini através de uma interface de linha de comando (`gemini.sh`) ou uma interface gráfica (`gemini-gui.sh`).
 
