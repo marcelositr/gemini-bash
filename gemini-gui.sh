@@ -1,9 +1,9 @@
 #!/bin/bash
 #===============================================================================
 #
-#          FILE: gemini-gui-final.sh
+#          FILE: gemini-gui.sh
 #
-#         USAGE: ./gemini-gui-final.sh
+#         USAGE: ./gemini-gui.sh
 #
 #   DESCRIPTION: A minimalist GUI for the Google Gemini API using Zenity.
 #                Operates in a loop for sequential queries.
