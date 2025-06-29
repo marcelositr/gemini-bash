@@ -1,9 +1,9 @@
 #!/bin/bash
 #===============================================================================
 #
-#          FILE: gemini-clean.sh
+#          FILE: gemini.sh
 #
-#         USAGE: ./gemini-clean.sh "Your question for the AI"
+#         USAGE: ./gemini.sh "Your question for the AI"
 #
 #   DESCRIPTION: Command-Line Interface (CLI) for the Google Gemini API.
 #                Simplifies access to Google's AI directly from the terminal.
