@@ -58,3 +58,7 @@ Para guias aprofundados, exemplos, dicas de customização e solução de proble
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Sinta-se à vontade para usar, modificar e distribuir.
+
+---
+Created by [@marcelositr](https://github.com/marcelositr)
+
