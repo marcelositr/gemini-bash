@@ -1,7 +1,6 @@
 # Gemini Shell Scripts - CLI & GUI para a IA do Google
 
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Go](https://img.shields.io/badge/language-Go-blueviolet.svg)
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow.svg)
 ![Build](https://img.shields.io/github/actions/workflow/status/marcelositr/gemini-shell/ci.yml?branch=main)
 ![Shellably](https://img.shields.io/badge/feito%20com-%F0%9F%A4%96%20x%20%F0%9F%92%BB-critical)
